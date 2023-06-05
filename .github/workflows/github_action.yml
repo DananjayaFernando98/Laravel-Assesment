@@ -1,0 +1,48 @@
+name: Deploy to EC2 and RDS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  EC2_INSTANCE_IP: 54.81.151.1
+  EC2_INSTANCE_USERNAME: Ubuntu
+  RDS_HOST: laravelassesment.cbj8xu6e0sll.us-east-1.rds.amazonaws.com
+  RDS_PORT: 3306
+  RDS_DATABASE: laravelproject
+  RDS_USERNAME: admin
+  RDS_PASSWORD: Supun123
+
+jobs:
+  deploy:
+    runs-on: ubuntu
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt update
+          sudo apt install -y awscli
+
+      - name: Configure AWS credentials
+        run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY }}
+          && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_KEY }}
+          && aws configure set default.region ${{ secrets.AWS_REGION }}
+
+      - name: Install SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Install MySQL client
+        run: sudo apt install -y mysql-client
+
+      - name: Deploy to EC2 and RDS
+        run: |
+          rsync -rav --delete --exclude='.env' --exclude='vendor/' --exclude='node_modules/' --exclude='storage/' --exclude='public/storage' --exclude='.git/' $GITHUB_WORKSPACE/ ${{ secrets.EC2_INSTANCE_USERNAME }}@${{ secrets.EC2_INSTANCE_IP }}:/var/www/html/
+
+          mysql -h ${{ secrets.RDS_HOST }} -P ${{ secrets.RDS_PORT }} -u ${{ secrets.RDS_USERNAME }} -p"${{ secrets.RDS_PASSWORD }}" -e "CREATE DATABASE IF NOT EXISTS ${{ secrets.RDS_DATABASE }}"
+
