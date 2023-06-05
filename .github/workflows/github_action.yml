@@ -35,7 +35,8 @@ jobs:
       - name: Install SSH key
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 /home/runner/.ssh/id_rsa
+          #chmod 600 /home/runner/.ssh/id_rsa
+          Host github.com IdentityFile ~/.ssh/id_rsa
 
 
       - name: Install MySQL client
