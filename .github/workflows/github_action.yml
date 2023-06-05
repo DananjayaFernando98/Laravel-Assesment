@@ -35,7 +35,7 @@ jobs:
       - name: Install SSH key
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 cd /home/runner/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
 
 
