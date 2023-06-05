@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  EC2_INSTANCE_IP: 54.81.151.1
+  EC2_INSTANCE_IP: 44.204.81.42
   EC2_INSTANCE_USERNAME: Ubuntu
   RDS_HOST: laravelassesment.cbj8xu6e0sll.us-east-1.rds.amazonaws.com
   RDS_PORT: 3306
