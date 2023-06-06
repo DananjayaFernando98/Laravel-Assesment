@@ -46,7 +46,11 @@ jobs:
 
       - name: Deploy to EC2 and RDS
         run: |
-          rsync -rav --delete --exclude='.env' --exclude='vendor/' --exclude='node_modules/' --exclude='storage/' --exclude='public/storage' --exclude='.git/' $GITHUB_WORKSPACE/ ${{ secrets.EC2_INSTANCE_USERNAME }}@${{ secrets.EC2_INSTANCE_IP }}:/var/www/html/
+          #rsync -rav --delete --exclude='.env' --exclude='vendor/' --exclude='node_modules/' --exclude='storage/' --exclude='public/storage' --exclude='.git/' $GITHUB_WORKSPACE/ ${{ secrets.EC2_INSTANCE_USERNAME }}@${{ secrets.EC2_INSTANCE_IP }}:/var/www/html/
+
+          #mysql -h ${{ secrets.RDS_HOST }} -P ${{ secrets.RDS_PORT }} -u ${{ secrets.RDS_USERNAME }} -p"${{ secrets.RDS_PASSWORD }}"
+          
+          rsync -e 'ssh -o StrictHostKeyChecking=no' -rav --delete --exclude='.env' --exclude='vendor/' --exclude='node_modules/' --exclude='storage/' --exclude='public/storage' --exclude='.git/' $GITHUB_WORKSPACE/ ${{ secrets.EC2_INSTANCE_USERNAME }}@${{ secrets.EC2_INSTANCE_IP }}:/var/www/html/
 
           mysql -h ${{ secrets.RDS_HOST }} -P ${{ secrets.RDS_PORT }} -u ${{ secrets.RDS_USERNAME }} -p"${{ secrets.RDS_PASSWORD }}"
 
