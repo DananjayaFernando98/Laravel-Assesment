@@ -35,9 +35,15 @@ jobs:
 
       - name: Install SSH key
         run: |
+         #mkdir -p ~/.ssh
+         #echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+         #chmod 600 ~/.ssh/id_rsa
          mkdir -p ~/.ssh
-         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-         chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
 
 
 
@@ -50,7 +56,7 @@ jobs:
 
           #mysql -h ${{ secrets.RDS_HOST }} -P ${{ secrets.RDS_PORT }} -u ${{ secrets.RDS_USERNAME }} -p"${{ secrets.RDS_PASSWORD }}"
           
-          rsync -e 'ssh -o StrictHostKeyChecking=no' -rav --delete --exclude='.env' --exclude='vendor/' --exclude='node_modules/' --exclude='storage/' --exclude='public/storage' --exclude='.git/' $GITHUB_WORKSPACE/ ${{ secrets.EC2_INSTANCE_USERNAME }}@${{ secrets.EC2_INSTANCE_IP }}:/var/www/html/
+          rsync -rav -e 'ssh -o StrictHostKeyChecking=no' -rav --delete --exclude='.env' --exclude='vendor/' --exclude='node_modules/' --exclude='storage/' --exclude='public/storage' --exclude='.git/' $GITHUB_WORKSPACE/ ${{ secrets.EC2_INSTANCE_USERNAME }}@${{ secrets.EC2_INSTANCE_IP }}:/var/www/html/
 
           mysql -h ${{ secrets.RDS_HOST }} -P ${{ secrets.RDS_PORT }} -u ${{ secrets.RDS_USERNAME }} -p"${{ secrets.RDS_PASSWORD }}"
 
