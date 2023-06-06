@@ -35,12 +35,10 @@ jobs:
 
       - name: Install SSH key
         run: |
-         #mkdir -p ~/.ssh
-         #echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-         #chmod 600 ~/.ssh/id_rsa
          mkdir -p ~/.ssh
          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-         chmod 600 /home/runner/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
+        
 
 
           eval "$(ssh-agent -s)"
