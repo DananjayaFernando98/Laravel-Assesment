@@ -42,7 +42,8 @@ jobs:
 
 
           eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
+          ssh-add /home/runner/.ssh/id_rsa
+
 
 
 
